@@ -1,0 +1,22 @@
+packages:
+  "framer-motion": "For smooth page transitions and interactive animations"
+  "recharts": "For rendering beautiful attendance statistics charts on the dashboard"
+  "date-fns": "For formatting and manipulating dates in reports and lessons"
+  "react-hook-form": "For robust and performant form state management"
+  "@hookform/resolvers": "To integrate Zod validation with react-hook-form"
+  "zod": "For strongly typed schema validation on all forms"
+  "clsx": "For conditional class name merging"
+  "tailwind-merge": "For resolving Tailwind CSS class conflicts safely"
+
+images:
+  - path: "artifacts/attendance/public/images/logo.png"
+    description: "Minimalist, clean, geometric logo for an educational institution or university. Light blue and navy colors. Transparent background. Professional and modern."
+    aspect_ratio: "1:1"
+  - path: "artifacts/attendance/public/images/auth-bg.png"
+    description: "Abstract, soft gradient background in light blues and crisp whites. Professional, academic, clean aesthetic with very subtle geometric shapes."
+    aspect_ratio: "16:9"
+
+notes:
+  - Use React Query hooks from @workspace/api-client-react for data fetching
+  - Assume wouter for routing
+  - Implement full Russian localization for all UI elements

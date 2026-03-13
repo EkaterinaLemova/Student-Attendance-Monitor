@@ -1,22 +1,35 @@
 openapi: 3.1.0
 info:
-  # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
-  description: API specification
+  description: Attendance Control API
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
     description: Health operations
+  - name: auth
+    description: Authentication
+  - name: groups
+    description: Student groups
+  - name: students
+    description: Students
+  - name: subjects
+    description: Subjects / disciplines
+  - name: lessons
+    description: Lessons / classes
+  - name: attendance
+    description: Attendance records
+  - name: reports
+    description: Reports and statistics
+
 paths:
   /healthz:
     get:
       operationId: healthCheck
       tags: [health]
       summary: Health check
-      description: Returns server health status
       responses:
         "200":
           description: Healthy
@@ -24,6 +37,492 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+
+  /auth/login:
+    post:
+      operationId: login
+      tags: [auth]
+      summary: Login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginRequest"
+      responses:
+        "200":
+          description: Logged in successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LoginResponse"
+        "401":
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /auth/logout:
+    post:
+      operationId: logout
+      tags: [auth]
+      summary: Logout
+      responses:
+        "200":
+          description: Logged out
+
+  /auth/me:
+    get:
+      operationId: getMe
+      tags: [auth]
+      summary: Get current user
+      responses:
+        "200":
+          description: Current user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "401":
+          description: Not authenticated
+
+  /groups:
+    get:
+      operationId: getGroups
+      tags: [groups]
+      summary: List all groups
+      responses:
+        "200":
+          description: List of groups
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Group"
+    post:
+      operationId: createGroup
+      tags: [groups]
+      summary: Create a group
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateGroupRequest"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Group"
+
+  /groups/{id}:
+    get:
+      operationId: getGroup
+      tags: [groups]
+      summary: Get a group by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Group
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Group"
+    put:
+      operationId: updateGroup
+      tags: [groups]
+      summary: Update a group
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateGroupRequest"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Group"
+    delete:
+      operationId: deleteGroup
+      tags: [groups]
+      summary: Delete a group
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  /students:
+    get:
+      operationId: getStudents
+      tags: [students]
+      summary: List students
+      parameters:
+        - name: groupId
+          in: query
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: List of students
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Student"
+    post:
+      operationId: createStudent
+      tags: [students]
+      summary: Create a student
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateStudentRequest"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Student"
+
+  /students/{id}:
+    get:
+      operationId: getStudent
+      tags: [students]
+      summary: Get a student
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Student
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Student"
+    put:
+      operationId: updateStudent
+      tags: [students]
+      summary: Update a student
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateStudentRequest"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Student"
+    delete:
+      operationId: deleteStudent
+      tags: [students]
+      summary: Delete a student
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  /subjects:
+    get:
+      operationId: getSubjects
+      tags: [subjects]
+      summary: List subjects
+      responses:
+        "200":
+          description: List of subjects
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Subject"
+    post:
+      operationId: createSubject
+      tags: [subjects]
+      summary: Create a subject
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateSubjectRequest"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Subject"
+
+  /subjects/{id}:
+    put:
+      operationId: updateSubject
+      tags: [subjects]
+      summary: Update a subject
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateSubjectRequest"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Subject"
+    delete:
+      operationId: deleteSubject
+      tags: [subjects]
+      summary: Delete a subject
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  /lessons:
+    get:
+      operationId: getLessons
+      tags: [lessons]
+      summary: List lessons
+      parameters:
+        - name: groupId
+          in: query
+          schema:
+            type: integer
+        - name: subjectId
+          in: query
+          schema:
+            type: integer
+        - name: date
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of lessons
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Lesson"
+    post:
+      operationId: createLesson
+      tags: [lessons]
+      summary: Create a lesson
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateLessonRequest"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Lesson"
+
+  /lessons/{id}:
+    get:
+      operationId: getLesson
+      tags: [lessons]
+      summary: Get a lesson
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Lesson with attendance
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LessonWithAttendance"
+    put:
+      operationId: updateLesson
+      tags: [lessons]
+      summary: Update a lesson
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateLessonRequest"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Lesson"
+    delete:
+      operationId: deleteLesson
+      tags: [lessons]
+      summary: Delete a lesson
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  /attendance:
+    get:
+      operationId: getAttendance
+      tags: [attendance]
+      summary: Get attendance records
+      parameters:
+        - name: lessonId
+          in: query
+          schema:
+            type: integer
+        - name: studentId
+          in: query
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: List of attendance records
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/AttendanceRecord"
+    post:
+      operationId: saveAttendance
+      tags: [attendance]
+      summary: Save attendance for a lesson (bulk upsert)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SaveAttendanceRequest"
+      responses:
+        "200":
+          description: Saved attendance records
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/AttendanceRecord"
+
+  /reports/group/{groupId}:
+    get:
+      operationId: getGroupReport
+      tags: [reports]
+      summary: Get attendance report for a group
+      parameters:
+        - name: groupId
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: subjectId
+          in: query
+          schema:
+            type: integer
+        - name: startDate
+          in: query
+          schema:
+            type: string
+        - name: endDate
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Group attendance report
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GroupReport"
+
+  /reports/stats:
+    get:
+      operationId: getStats
+      tags: [reports]
+      summary: Get overall statistics for dashboard
+      responses:
+        "200":
+          description: Dashboard statistics
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Stats"
+
 components:
   schemas:
     HealthStatus:
@@ -34,3 +533,350 @@ components:
       required:
         - status
 
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+      required:
+        - error
+
+    LoginRequest:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+      required:
+        - username
+        - password
+
+    LoginResponse:
+      type: object
+      properties:
+        user:
+          $ref: "#/components/schemas/User"
+      required:
+        - user
+
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+        username:
+          type: string
+        fullName:
+          type: string
+        role:
+          type: string
+          enum: [admin, teacher]
+      required:
+        - id
+        - username
+        - fullName
+        - role
+
+    Group:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        specialty:
+          type: string
+        year:
+          type: integer
+        studentCount:
+          type: integer
+      required:
+        - id
+        - name
+        - specialty
+        - year
+        - studentCount
+
+    CreateGroupRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        specialty:
+          type: string
+        year:
+          type: integer
+      required:
+        - name
+        - specialty
+        - year
+
+    Student:
+      type: object
+      properties:
+        id:
+          type: integer
+        firstName:
+          type: string
+        lastName:
+          type: string
+        middleName:
+          type: string
+        groupId:
+          type: integer
+        groupName:
+          type: string
+        studentNumber:
+          type: string
+      required:
+        - id
+        - firstName
+        - lastName
+        - groupId
+        - groupName
+
+    CreateStudentRequest:
+      type: object
+      properties:
+        firstName:
+          type: string
+        lastName:
+          type: string
+        middleName:
+          type: string
+        groupId:
+          type: integer
+        studentNumber:
+          type: string
+      required:
+        - firstName
+        - lastName
+        - groupId
+
+    Subject:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        teacherId:
+          type: integer
+        teacherName:
+          type: string
+      required:
+        - id
+        - name
+        - teacherId
+        - teacherName
+
+    CreateSubjectRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        teacherId:
+          type: integer
+      required:
+        - name
+        - teacherId
+
+    Lesson:
+      type: object
+      properties:
+        id:
+          type: integer
+        date:
+          type: string
+        topic:
+          type: string
+        lessonType:
+          type: string
+          enum: [lecture, practice, lab, seminar]
+        groupId:
+          type: integer
+        groupName:
+          type: string
+        subjectId:
+          type: integer
+        subjectName:
+          type: string
+        teacherId:
+          type: integer
+        teacherName:
+          type: string
+      required:
+        - id
+        - date
+        - topic
+        - lessonType
+        - groupId
+        - groupName
+        - subjectId
+        - subjectName
+        - teacherId
+        - teacherName
+
+    CreateLessonRequest:
+      type: object
+      properties:
+        date:
+          type: string
+        topic:
+          type: string
+        lessonType:
+          type: string
+          enum: [lecture, practice, lab, seminar]
+        groupId:
+          type: integer
+        subjectId:
+          type: integer
+      required:
+        - date
+        - topic
+        - lessonType
+        - groupId
+        - subjectId
+
+    AttendanceRecord:
+      type: object
+      properties:
+        id:
+          type: integer
+        lessonId:
+          type: integer
+        studentId:
+          type: integer
+        studentName:
+          type: string
+        status:
+          type: string
+          enum: [present, absent, late, excused]
+        note:
+          type: string
+      required:
+        - id
+        - lessonId
+        - studentId
+        - studentName
+        - status
+
+    LessonWithAttendance:
+      type: object
+      properties:
+        lesson:
+          $ref: "#/components/schemas/Lesson"
+        attendance:
+          type: array
+          items:
+            $ref: "#/components/schemas/AttendanceRecord"
+      required:
+        - lesson
+        - attendance
+
+    SaveAttendanceRequest:
+      type: object
+      properties:
+        lessonId:
+          type: integer
+        records:
+          type: array
+          items:
+            type: object
+            properties:
+              studentId:
+                type: integer
+              status:
+                type: string
+                enum: [present, absent, late, excused]
+              note:
+                type: string
+            required:
+              - studentId
+              - status
+      required:
+        - lessonId
+        - records
+
+    StudentAttendanceSummary:
+      type: object
+      properties:
+        studentId:
+          type: integer
+        studentName:
+          type: string
+        totalLessons:
+          type: integer
+        present:
+          type: integer
+        absent:
+          type: integer
+        late:
+          type: integer
+        excused:
+          type: integer
+        attendanceRate:
+          type: number
+      required:
+        - studentId
+        - studentName
+        - totalLessons
+        - present
+        - absent
+        - late
+        - excused
+        - attendanceRate
+
+    GroupReport:
+      type: object
+      properties:
+        group:
+          $ref: "#/components/schemas/Group"
+        subject:
+          $ref: "#/components/schemas/Subject"
+        lessons:
+          type: array
+          items:
+            $ref: "#/components/schemas/Lesson"
+        students:
+          type: array
+          items:
+            $ref: "#/components/schemas/StudentAttendanceSummary"
+        attendanceMatrix:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+      required:
+        - group
+        - lessons
+        - students
+        - attendanceMatrix
+
+    Stats:
+      type: object
+      properties:
+        totalStudents:
+          type: integer
+        totalGroups:
+          type: integer
+        totalLessons:
+          type: integer
+        averageAttendanceRate:
+          type: number
+        recentLessons:
+          type: array
+          items:
+            $ref: "#/components/schemas/Lesson"
+        lowAttendanceStudents:
+          type: array
+          items:
+            $ref: "#/components/schemas/StudentAttendanceSummary"
+      required:
+        - totalStudents
+        - totalGroups
+        - totalLessons
+        - averageAttendanceRate
+        - recentLessons
+        - lowAttendanceStudents
