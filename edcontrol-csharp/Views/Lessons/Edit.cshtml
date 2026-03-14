@@ -1,0 +1,53 @@
+@model EdControl.Models.Lesson
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Редактировать занятие";
+}
+<div class="page-header"><h4 class="mb-0 fw-bold">Редактировать занятие</h4></div>
+<div class="p-4">
+    <div class="card border-0 shadow-sm" style="max-width:500px">
+        <div class="card-body p-4">
+            <form method="post">
+                <input type="hidden" name="Id" value="@Model.Id" />
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Дата</label>
+                    <input name="Date" type="date" class="form-control" value="@Model.Date.ToString("yyyy-MM-dd")" required />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Группа</label>
+                    <select name="GroupId" class="form-select" required>
+                        @foreach (var item in (Microsoft.AspNetCore.Mvc.Rendering.SelectList)ViewBag.Groups)
+                        {
+                            <option value="@item.Value" @(item.Value == Model.GroupId.ToString() ? "selected" : "")>@item.Text</option>
+                        }
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Предмет</label>
+                    <select name="SubjectId" class="form-select" required>
+                        @foreach (var item in (Microsoft.AspNetCore.Mvc.Rendering.SelectList)ViewBag.Subjects)
+                        {
+                            <option value="@item.Value" @(item.Value == Model.SubjectId.ToString() ? "selected" : "")>@item.Text</option>
+                        }
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Тип занятия</label>
+                    <select name="LessonType" class="form-select">
+                        <option value="lecture" @(Model.LessonType == "lecture" ? "selected" : "")>Лекция</option>
+                        <option value="practice" @(Model.LessonType == "practice" ? "selected" : "")>Практика</option>
+                        <option value="lab" @(Model.LessonType == "lab" ? "selected" : "")>Лабораторная работа</option>
+                    </select>
+                </div>
+                <div class="mb-4">
+                    <label class="form-label fw-semibold">Тема занятия</label>
+                    <input name="Topic" class="form-control" value="@Model.Topic" />
+                </div>
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-primary">Сохранить</button>
+                    <a href="/Lessons" class="btn btn-outline-secondary">Отмена</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
