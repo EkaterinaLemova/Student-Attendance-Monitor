@@ -1,0 +1,31 @@
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Новый предмет";
+}
+<div class="page-header"><h4 class="mb-0 fw-bold">Новый предмет</h4></div>
+<div class="p-4">
+    <div class="card border-0 shadow-sm" style="max-width:500px">
+        <div class="card-body p-4">
+            <form method="post">
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Название предмета</label>
+                    <input name="Name" class="form-control" required />
+                </div>
+                <div class="mb-4">
+                    <label class="form-label fw-semibold">Преподаватель</label>
+                    <select name="TeacherId" class="form-select">
+                        <option value="">— Не указан —</option>
+                        @foreach (var item in (Microsoft.AspNetCore.Mvc.Rendering.SelectList)ViewBag.Teachers)
+                        {
+                            <option value="@item.Value">@item.Text</option>
+                        }
+                    </select>
+                </div>
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-primary">Сохранить</button>
+                    <a href="/Subjects" class="btn btn-outline-secondary">Отмена</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

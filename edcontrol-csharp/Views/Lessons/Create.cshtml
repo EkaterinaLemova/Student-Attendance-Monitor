@@ -1,0 +1,51 @@
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Новое занятие";
+}
+<div class="page-header"><h4 class="mb-0 fw-bold">Новое занятие</h4></div>
+<div class="p-4">
+    <div class="card border-0 shadow-sm" style="max-width:500px">
+        <div class="card-body p-4">
+            <form method="post">
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Дата</label>
+                    <input name="Date" type="date" class="form-control" value="@DateTime.Now.ToString("yyyy-MM-dd")" required />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Группа</label>
+                    <select name="GroupId" class="form-select" required>
+                        @foreach (var item in (Microsoft.AspNetCore.Mvc.Rendering.SelectList)ViewBag.Groups)
+                        {
+                            <option value="@item.Value">@item.Text</option>
+                        }
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Предмет</label>
+                    <select name="SubjectId" class="form-select" required>
+                        @foreach (var item in (Microsoft.AspNetCore.Mvc.Rendering.SelectList)ViewBag.Subjects)
+                        {
+                            <option value="@item.Value">@item.Text</option>
+                        }
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Тип занятия</label>
+                    <select name="LessonType" class="form-select">
+                        <option value="lecture">Лекция</option>
+                        <option value="practice">Практика</option>
+                        <option value="lab">Лабораторная работа</option>
+                    </select>
+                </div>
+                <div class="mb-4">
+                    <label class="form-label fw-semibold">Тема занятия</label>
+                    <input name="Topic" class="form-control" />
+                </div>
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-primary">Сохранить</button>
+                    <a href="/Lessons" class="btn btn-outline-secondary">Отмена</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

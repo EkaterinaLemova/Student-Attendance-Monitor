@@ -1,0 +1,94 @@
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Отчёты";
+    var group = ViewBag.Group as EdControl.Models.Group;
+    var lessons = ViewBag.Lessons as List<EdControl.Models.Lesson>;
+    var students = ViewBag.Students as List<EdControl.Models.Student>;
+    var records = ViewBag.Records as List<EdControl.Models.AttendanceRecord>;
+}
+<div class="page-header">
+    <h4 class="mb-0 fw-bold">Отчёты по посещаемости</h4>
+</div>
+<div class="p-4">
+    <form class="card border-0 shadow-sm p-4 mb-4">
+        <div class="row g-3 align-items-end">
+            <div class="col-md-4">
+                <label class="form-label fw-semibold">Группа</label>
+                <select name="groupId" class="form-select">
+                    <option value="">— Выберите группу —</option>
+                    @foreach (var item in (Microsoft.AspNetCore.Mvc.Rendering.SelectList)ViewBag.Groups)
+                    {
+                        <option value="@item.Value" @(item.Selected ? "selected" : "")>@item.Text</option>
+                    }
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label fw-semibold">Предмет (необязательно)</label>
+                <select name="subjectId" class="form-select">
+                    <option value="">— Все предметы —</option>
+                    @foreach (var item in (Microsoft.AspNetCore.Mvc.Rendering.SelectList)ViewBag.Subjects)
+                    {
+                        <option value="@item.Value" @(item.Selected ? "selected" : "")>@item.Text</option>
+                    }
+                </select>
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-primary w-100">Показать</button>
+            </div>
+        </div>
+    </form>
+
+    @if (group != null && lessons != null && students != null)
+    {
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white fw-semibold border-0 pt-3">
+                Отчёт по группе @group.Name
+            </div>
+            <div class="card-body p-0" style="overflow-x:auto">
+                <table class="table table-bordered table-sm mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th style="min-width:200px">Студент</th>
+                            @foreach (var lesson in lessons)
+                            {
+                                <th class="text-center" style="min-width:80px" title="@lesson.Subject?.Name — @lesson.Topic">
+                                    @lesson.Date.ToString("dd.MM")
+                                </th>
+                            }
+                            <th class="text-center">Итого %</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var student in students)
+                        {
+                            var presentCount = 0;
+                            <tr>
+                                <td class="fw-semibold">@student.FullName</td>
+                                @foreach (var lesson in lessons)
+                                {
+                                    var rec = records?.FirstOrDefault(r => r.StudentId == student.Id && r.LessonId == lesson.Id);
+                                    var status = rec?.Status ?? "";
+                                    var (bg, icon) = status switch {
+                                        "present" => ("#dcfce7", "✓"),
+                                        "late" => ("#fef9c3", "О"),
+                                        "excused" => ("#dbeafe", "У"),
+                                        "absent" => ("#fee2e2", "Н"),
+                                        _ => ("#f1f5f9", "—")
+                                    };
+                                    if (status == "present" || status == "late") presentCount++;
+                                    <td class="text-center" style="background:@bg">@icon</td>
+                                }
+                                <td class="text-center fw-bold">
+                                    @(lessons.Count > 0 ? $"{(int)Math.Round((double)presentCount / lessons.Count * 100)}%" : "—")
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <div class="card-footer bg-white text-muted small">
+                ✓ — Присутствует &nbsp; О — Опоздал &nbsp; У — Уважительная &nbsp; Н — Отсутствует
+            </div>
+        </div>
+    }
+</div>

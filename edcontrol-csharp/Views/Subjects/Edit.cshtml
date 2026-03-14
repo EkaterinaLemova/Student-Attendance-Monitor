@@ -1,0 +1,33 @@
+@model EdControl.Models.Subject
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Редактировать предмет";
+}
+<div class="page-header"><h4 class="mb-0 fw-bold">Редактировать предмет</h4></div>
+<div class="p-4">
+    <div class="card border-0 shadow-sm" style="max-width:500px">
+        <div class="card-body p-4">
+            <form method="post">
+                <input type="hidden" name="Id" value="@Model.Id" />
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Название предмета</label>
+                    <input name="Name" class="form-control" value="@Model.Name" required />
+                </div>
+                <div class="mb-4">
+                    <label class="form-label fw-semibold">Преподаватель</label>
+                    <select name="TeacherId" class="form-select">
+                        <option value="">— Не указан —</option>
+                        @foreach (var item in (Microsoft.AspNetCore.Mvc.Rendering.SelectList)ViewBag.Teachers)
+                        {
+                            <option value="@item.Value" @(item.Value == Model.TeacherId.ToString() ? "selected" : "")>@item.Text</option>
+                        }
+                    </select>
+                </div>
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-primary">Сохранить</button>
+                    <a href="/Subjects" class="btn btn-outline-secondary">Отмена</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

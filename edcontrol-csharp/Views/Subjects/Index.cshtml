@@ -1,0 +1,38 @@
+@model List<EdControl.Models.Subject>
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Предметы";
+}
+<div class="page-header d-flex justify-content-between align-items-center">
+    <div>
+        <h4 class="mb-0 fw-bold">Предметы</h4>
+        <p class="text-muted mb-0">Учебные дисциплины</p>
+    </div>
+    <a href="/Subjects/Create" class="btn btn-primary"><i class="bi bi-plus-lg me-1"></i>Добавить предмет</a>
+</div>
+<div class="p-4">
+    <div class="card border-0 shadow-sm">
+        <div class="card-body p-0">
+            <table class="table table-hover mb-0">
+                <thead class="table-light">
+                    <tr><th>Название</th><th>Преподаватель</th><th>Действия</th></tr>
+                </thead>
+                <tbody>
+                    @foreach (var s in Model)
+                    {
+                        <tr>
+                            <td class="fw-semibold">@s.Name</td>
+                            <td>@(s.Teacher?.FullName ?? "—")</td>
+                            <td>
+                                <a href="/Subjects/Edit/@s.Id" class="btn btn-sm btn-outline-secondary me-1"><i class="bi bi-pencil"></i></a>
+                                <form method="post" action="/Subjects/Delete/@s.Id" style="display:inline" onsubmit="return confirm('Удалить предмет?')">
+                                    <button class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

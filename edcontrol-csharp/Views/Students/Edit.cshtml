@@ -1,0 +1,44 @@
+@model EdControl.Models.Student
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Редактировать студента";
+}
+<div class="page-header"><h4 class="mb-0 fw-bold">Редактировать студента</h4></div>
+<div class="p-4">
+    <div class="card border-0 shadow-sm" style="max-width:500px">
+        <div class="card-body p-4">
+            <form method="post">
+                <input type="hidden" name="Id" value="@Model.Id" />
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Фамилия</label>
+                    <input name="LastName" class="form-control" value="@Model.LastName" required />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Имя</label>
+                    <input name="FirstName" class="form-control" value="@Model.FirstName" required />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Отчество</label>
+                    <input name="MiddleName" class="form-control" value="@Model.MiddleName" />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Группа</label>
+                    <select name="GroupId" class="form-select" required>
+                        @foreach (var item in (Microsoft.AspNetCore.Mvc.Rendering.SelectList)ViewBag.Groups)
+                        {
+                            <option value="@item.Value" @(item.Value == Model.GroupId.ToString() ? "selected" : "")>@item.Text</option>
+                        }
+                    </select>
+                </div>
+                <div class="mb-4">
+                    <label class="form-label fw-semibold">Номер студенческого билета</label>
+                    <input name="StudentNumber" class="form-control" value="@Model.StudentNumber" />
+                </div>
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-primary">Сохранить</button>
+                    <a href="/Students" class="btn btn-outline-secondary">Отмена</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

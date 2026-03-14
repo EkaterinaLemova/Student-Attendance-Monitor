@@ -1,0 +1,91 @@
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Главная";
+}
+<div class="page-header">
+    <h4 class="mb-0 fw-bold">Главная</h4>
+    <p class="text-muted mb-0">Обзор системы контроля посещаемости</p>
+</div>
+<div class="p-4">
+    <div class="row g-3 mb-4">
+        <div class="col-md-3">
+            <div class="card stat-card p-3">
+                <div class="d-flex align-items-center gap-3">
+                    <div style="width:48px;height:48px;background:#eff6ff;border-radius:10px;display:flex;align-items:center;justify-content:center">
+                        <i class="bi bi-person-fill text-primary fs-5"></i>
+                    </div>
+                    <div>
+                        <div class="text-muted small">Студентов</div>
+                        <div class="fw-bold fs-4">@ViewBag.Students</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card stat-card p-3">
+                <div class="d-flex align-items-center gap-3">
+                    <div style="width:48px;height:48px;background:#f0fdf4;border-radius:10px;display:flex;align-items:center;justify-content:center">
+                        <i class="bi bi-people-fill text-success fs-5"></i>
+                    </div>
+                    <div>
+                        <div class="text-muted small">Групп</div>
+                        <div class="fw-bold fs-4">@ViewBag.Groups</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card stat-card p-3">
+                <div class="d-flex align-items-center gap-3">
+                    <div style="width:48px;height:48px;background:#fff7ed;border-radius:10px;display:flex;align-items:center;justify-content:center">
+                        <i class="bi bi-calendar-fill text-warning fs-5"></i>
+                    </div>
+                    <div>
+                        <div class="text-muted small">Занятий</div>
+                        <div class="fw-bold fs-4">@ViewBag.Lessons</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card stat-card p-3">
+                <div class="d-flex align-items-center gap-3">
+                    <div style="width:48px;height:48px;background:#fdf4ff;border-radius:10px;display:flex;align-items:center;justify-content:center">
+                        <i class="bi bi-bar-chart-fill text-purple fs-5"></i>
+                    </div>
+                    <div>
+                        <div class="text-muted small">Посещаемость</div>
+                        <div class="fw-bold fs-4">@ViewBag.Rate%</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-sm">
+        <div class="card-header bg-white fw-semibold border-0 pt-3">Последние занятия</div>
+        <div class="card-body p-0">
+            <table class="table table-hover mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Дата</th>
+                        <th>Предмет</th>
+                        <th>Группа</th>
+                        <th>Тема</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var lesson in ViewBag.RecentLessons)
+                    {
+                        <tr>
+                            <td>@lesson.Date.ToString("dd.MM.yyyy")</td>
+                            <td>@lesson.Subject?.Name</td>
+                            <td>@lesson.Group?.Name</td>
+                            <td>@(lesson.Topic ?? "—")</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
